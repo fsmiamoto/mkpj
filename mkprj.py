@@ -8,7 +8,7 @@ from dotenv import load_dotenv
 from github import Github
 import git
 
-# Access $HOME environment var.
+# Access the HOME environment var.
 HOME_DIR = getenv('HOME')
 
 # Load dotenv file
@@ -23,19 +23,20 @@ PROJECTS_DIR = join(HOME_DIR, "Dev")
 
 
 def get_args():
-    parser = argparse.ArgumentParser(description="Create a new GitHub repo.")
+    parser = argparse.ArgumentParser(
+        description="Create a new project with git / GitHub.")
 
     parser.add_argument("name",
                         metavar='NAME',
                         type=str,
-                        help='Name of the repo')
+                        help='Name of the project')
     parser.add_argument("--github",
                         action="store_true",
                         help="Create a GitHub repo for the project")
     parser.add_argument("--description",
                         dest='description',
                         type=str,
-                        help='Description of the repo')
+                        help='Description of the new repo')
     parser.add_argument("--private",
                         action="store_true",
                         help='Makes the repo private (public by default)')
@@ -79,7 +80,5 @@ if __name__ == '__main__':
                                                 args.private)
             if remote_url is not None:
                 r.create_remote('origin', remote_url)
-
     else:
         print('mkprj: Project with this name already exists!')
-
