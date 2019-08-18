@@ -1,0 +1,15 @@
+[[source]]
+name = "mkprj"
+
+[dev-packages]
+flake8 = "*"
+yapf = "*"
+jedi = "*"
+
+[packages]
+pygithub = "*"
+python-dotenv = "*"
+gitpython = "*"
+
+[requires]
+python_version = "3.7"
