@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 
 from os import getenv, mkdir
+from shutil import rmtree
 from os.path import join, exists
 import argparse
 
@@ -19,7 +20,7 @@ load_dotenv(dotenv_path)
 GITHUB_KEY = getenv('GITHUB_KEY')
 
 # Projects directory
-PROJECTS_DIR = join(HOME_DIR, "Dev")
+PROJECT_DIR = getenv("PROJECT_DIR")
 
 
 def get_args():
@@ -44,41 +45,49 @@ def get_args():
 
 
 def create_new_github_repo(name: str, description: str, private: bool) -> str:
+    if GITHUB_KEY is None:
+        raise ValueError('Missing GitHub key!')
+
     g = Github(GITHUB_KEY)
     user = g.get_user()
 
-    try:
-        user.get_repo(name)
-        print('mkdir: GitHub repo already exists!')
-        return
-    except Exception:
-        if description is not None:
-            new_repo = user.create_repo(name,
-                                        description=description,
-                                        private=private)
-        else:
-            new_repo = user.create_repo(name, private=private)
+    user_repos_names = [repo.name for repo in user.get_repos()]
 
-        return new_repo.ssh_url
+    if name in user_repos_names:
+        raise ValueError('GitHub repo with this name already exists!')
+
+    if description is None:
+        new_repo = user.create_repo(name, private=private)
+    else:
+        new_repo = user.create_repo(name,
+                                    description=description,
+                                    private=private)
+    return new_repo.ssh_url
 
 
 if __name__ == '__main__':
     args = get_args()
 
-    project_dir = join(PROJECTS_DIR, args.name)
+    project_dir = join(PROJECT_DIR, args.name)
 
     if not exists(project_dir):
-        # Create directory for the new project
-        mkdir(project_dir)
+        try:
+            # Create directory for the new project
+            mkdir(project_dir)
 
-        # Initialize git
-        r = git.Repo.init(project_dir)
+            # Initialize git
+            r = git.Repo.init(project_dir)
 
-        # Create GitHub repo
-        if args.github:
-            remote_url = create_new_github_repo(args.name, args.description,
-                                                args.private)
-            if remote_url is not None:
+            # Create GitHub repo
+            if args.github:
+                remote_url = create_new_github_repo(args.name,
+                                                    args.description,
+                                                    args.private)
                 r.create_remote('origin', remote_url)
+        except Exception as e:
+            print('mkprj: Error - {}'.format(e))
+
+            # Remove directory for atomicity
+            rmtree(project_dir)
     else:
         print('mkprj: Project with this name already exists!')
