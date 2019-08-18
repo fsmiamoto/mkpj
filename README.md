@@ -13,10 +13,10 @@ $ export GITHUB_KEY=********************** # If you want GitHub integration
 You can then start to create projects
 ```bash
 # Creates a new directory name MyNewProject with git initialized
-$ mkprj.py MyNewProject
+$ python mkprj.py MyNewProject
 
 # The same as above but with a new GitHub repo
-$ mkprj.py MyNewProjectWithGitHub --github --description "So cool!" --private
+$ python mkprj.py MyNewProjectWithGitHub --github --description "So cool!" --private
 ```
 The created GitHub will have the same name as the directory (i.e. `MyNewProjectWithGitHub`) and it'll be auto added to git remote locations.
 
