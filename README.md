@@ -1,30 +1,36 @@
-# mkprj
+# mkpj
 
-A simple tool to automate the creation of a new git / GitHub project
+A small tool to automate the creation of a new git / GitHub project
 
 ### Dependencies
-- PyGithub
-- GitPython
-- python-dotenv 
 
-### Usage
+It only depends on `requests` library
 
-First, you'll need these environment variables set in order to use the tool
+You can `pip install --user requests` if you're missing it
+
+### Getting started
+
 ```bash
-$ export PROJECT_DIR=$HOME/MyProjectsDir
-$ export GITHUB_KEY=********************** # If you want GitHub integration
+# Clone the repo
+git clone https://github.com/fsmiamoto/mkpj.git
+
+# Go to the new directory
+cd mkpj
+
+# Add your GitHub key to the a file (optional)
+echo "PLACE YOUR KEY HERE" > key.txt
 ```
-Alternatively, you can have a `.env` file at your `$HOME` with the environment
-variables above.
 
 You can then start to create projects:
+
 ```bash
-# Creates a new directory named MyNewProject at yout projects directory with git initialized
-$ python mkprj.py MyNewProject
+# Creates a new directory named MyNewProject directory with git initialized and a README file
+$ python mkpj.py MyNewProject
 
 # The same as above but with a new GitHub repo
-$ python mkprj.py MyNewProjectWithGitHub --github --description "So cool!" --private
+$ python mkpj.py MyNewProjectWithGitHub --github --description "So cool!" --private
 ```
+
 The created GitHub repo will have the same name as the directory (i.e. `MyNewProjectWithGitHub`) and it'll be auto added to git remote locations.
 
 Repos are public by default, but you can change that with
